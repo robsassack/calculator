@@ -14,10 +14,10 @@ let currentOperation = "";
 numberButton.forEach(function (number) {
   number.addEventListener("click", (e) => {
     if (currentOperation === "") {
-      if (firstNumber !== "0") {
+      if (firstNumber.toString() !== "0") {
         firstNumber += e.target.innerText;
       }
-      if (firstNumber === "0") {
+      if (firstNumber.toString() === "0") {
         if (e.target.innerText !== "0") {
           firstNumber = e.target.innerText;
         }
@@ -55,7 +55,7 @@ decimal.addEventListener("click", () => {
     secondNumber += '.';
   } if (secondNumber === '' && currentOperation !== '') {
     secondNumber = '.';
-  } else if (!firstNumber.includes('.')){
+  } else if (!firstNumber.toString().includes('.')){
     firstNumber += '.';
   }
   answerDisplay();
@@ -66,7 +66,7 @@ equalsButton.addEventListener("click", () => {
   && secondNumber !== ''
   && currentOperation !== '') {
     previousOp.innerText = `${firstNumber}${currentOperation}${secondNumber}=`;
-    firstNumber = operate(currentOperation, firstNumber, secondNumber);
+    firstNumber = round(operate(currentOperation, firstNumber, secondNumber));
     answer.innerText = firstNumber;
     secondNumber = '';
     currentOperation = '';
@@ -87,7 +87,7 @@ opButton.forEach(function (op) {
       setCurrentOp(e);
     } else {
       previousOp.innerText = `${firstNumber}${currentOperation}${secondNumber}=`;
-      firstNumber = operate(currentOperation, firstNumber, secondNumber);
+      firstNumber = round(operate(currentOperation, firstNumber, secondNumber));
       answer.innerText = firstNumber;
       setCurrentOp(e);
       secondNumber = '';
@@ -134,7 +134,9 @@ function divide(a, b) {
   return a / b;
 }
 
-
+function round(number) {
+  return number.toFixed(8).replace(/\.?0+$/, "");
+}
 
 function operate(operator, a, b) {
   a = parseFloat(a);
