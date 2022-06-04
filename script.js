@@ -7,89 +7,115 @@ const equalsButton = document.querySelector(".equals");
 const answer = document.querySelector(".answer");
 const previousOp = document.querySelector(".previous-operation");
 
-let currentPrompt = "";
+let firstNumber = "";
+let secondNumber = "";
 let currentOperation = "";
 
 numberButton.forEach(function (number) {
   number.addEventListener("click", (e) => {
-    currentPrompt += e.target.innerText;
-    answer.innerText = currentPrompt;
+    if (currentOperation === "") {
+      if (firstNumber !== "0") {
+        firstNumber += e.target.innerText;
+      }
+      if (firstNumber === "0") {
+        if (e.target.innerText !== "0") {
+          firstNumber = e.target.innerText;
+        }
+      }
+    } else {
+      secondNumber += e.target.innerText;
+    }
+    answerDisplay();
   });
 });
 
 deleteButton.addEventListener("click", () => {
-  if (currentPrompt.toString().slice(-3) === 'NaN') {
-    currentPrompt = currentPrompt.toString().slice(0, -3);
-  } else if (currentPrompt.slice(-2) === "e+") {
-    currentPrompt = currentPrompt.slice(0, -2);
-  } else {
-    currentPrompt = currentPrompt.slice(0, -1);
+  if (secondNumber !== '') {
+    secondNumber = secondNumber.toString().slice(0, -1);
+  } else if (currentOperation !== '') {
+    currentOperation = '';
+  } else if (firstNumber !== '') {
+    firstNumber = firstNumber.toString().slice(0, -1);
   }
-  answer.innerText = currentPrompt;
+  answerDisplay();
 });
 
 clearButton.addEventListener("click", () => {
-  currentPrompt = "";
+  if (firstNumber === '' && previousOp !== '') {
+    previousOp.innerText = '';
+  }
+  firstNumber = '';
+  secondNumber = '';
+  currentOperation = '';
   answer.innerText = "";
 });
 
-decimal.addEventListener("click", (e) => {
-  numbers = currentPrompt.split(/[/*+\-]/);
-  if (numbers.length < 2) {
-    if (!numbers[0].includes(".")) {
-      currentPrompt += ".";
-      answer.innerText = currentPrompt;
-    }
-  } else if (!numbers[1].includes(".")) {
-    currentPrompt += ".";
-    answer.innerText = currentPrompt;
+decimal.addEventListener("click", () => {
+  if (secondNumber !== '' && !secondNumber.includes(".")) {
+    secondNumber += '.';
+  } if (secondNumber === '' && currentOperation !== '') {
+    secondNumber = '.';
+  } else if (!firstNumber.includes('.')){
+    firstNumber += '.';
   }
+  answerDisplay();
 });
 
 equalsButton.addEventListener("click", () => {
-  numbers = currentPrompt.split(/[/*\-+]/);
-  let opAnswer = operate(currentOperation, numbers[0], numbers[1]);
-  answer.innerText = opAnswer;
-  previousOp.innerText = `${numbers[0]}${currentOperation}${numbers[1]}=`;
-  currentOperation = "";
-  currentPrompt = opAnswer.toString();
+  if (firstNumber !== ''
+  && secondNumber !== ''
+  && currentOperation !== '') {
+    previousOp.innerText = `${firstNumber}${currentOperation}${secondNumber}=`;
+    firstNumber = operate(currentOperation, firstNumber, secondNumber);
+    answer.innerText = firstNumber;
+    secondNumber = '';
+    currentOperation = '';
+  } else if (firstNumber !== '' && currentOperation === '') {
+    previousOp.innerText = `${firstNumber}=`;
+    answer.innerText = firstNumber;
+    secondNumber = '';
+    currentOperation = '';
+  }
 });
 
 opButton.forEach(function (op) {
   op.addEventListener("click", (e) => {
-    numbers = currentPrompt.split(/[/*\-+]/);
-    if (numbers.length === 2) {
-      let opAnswer = operate(currentOperation, numbers[0], numbers[1]);
-      answer.innerText = opAnswer;
-      previousOp.innerText = `${numbers[0]}${currentOperation}${numbers[1]}=`;
-      currentPrompt = opAnswer;
-      opAddToPrompt(e);
+    if (firstNumber === "") {
+      firstNumber = 0;
+      setCurrentOp(e);
+    } else if (secondNumber === "") {
+      setCurrentOp(e);
     } else {
-      opAddToPrompt(e);
+      previousOp.innerText = `${firstNumber}${currentOperation}${secondNumber}=`;
+      firstNumber = operate(currentOperation, firstNumber, secondNumber);
+      answer.innerText = firstNumber;
+      setCurrentOp(e);
+      secondNumber = '';
+      answerDisplay();
     }
   });
 });
 
-function opAddToPrompt(e) {
+function setCurrentOp(e) {
   switch (e.target.innerText) {
     case "÷":
-      currentPrompt += "/";
       currentOperation = "/";
       break;
     case "×":
-      currentPrompt += "*";
       currentOperation = "*";
       break;
     case "−":
-      currentPrompt += "-";
       currentOperation = "-";
       break;
     case "+":
-      currentPrompt += "+";
       currentOperation = "+";
       break;
   }
-  answer.innerText = currentPrompt;
+  answerDisplay();
+}
+
+function answerDisplay() {
+  answer.innerText = `${firstNumber}${currentOperation}${secondNumber}`;
 }
 
 function add(a, b) {
@@ -108,6 +134,8 @@ function divide(a, b) {
   return a / b;
 }
 
+
+
 function operate(operator, a, b) {
   a = parseFloat(a);
   b = parseFloat(b);
@@ -119,6 +147,9 @@ function operate(operator, a, b) {
     case "*":
       return multiply(a, b);
     case "/":
+      if (b === 0) {
+        return "Divide by 0 error";
+      }
       return divide(a, b);
   }
 }
