@@ -52,35 +52,21 @@ equalsButton.addEventListener("click", () => {
   answer.innerText = opAnswer;
   previousOp.innerText = `${numbers[0]}${currentOperation}${numbers[1]}=`;
   currentOperation = "";
-  currentPrompt = opAnswer;
+  currentPrompt = opAnswer.toString();
 });
 
 opButton.forEach(function (op) {
-  //   op.addEventListener("click", (e) => {
-  //     numbers = currentPrompt.split(/[/*\-+]/);
-  //     if (numbers.length === 2) {
-  //       // logic here for doing the calculation if there are already two numbers
-  //       if (numbers[1] === "") {
-  //         // second number is blank
-  //         console.log("second number blank");
-  //       } else {
-  //         console.log("two numbers");
-  //       }
-  //     } else if (numbers.length === 1) {
-  //       if (numbers[0] === "." || numbers[0] === "") {
-  //         // put a zero if first number is just a decimal or blank
-  //         currentPrompt += "0";
-  //         opAddToPrompt(e);
-  //         // } else if (numbers[0] === '') {
-  //         //     // put a zero
-  //         //     console.log('number 0 is blank');
-  //       } else {
-  //         opAddToPrompt(e);
-  //       }
-  //     }
-  //   });
   op.addEventListener("click", (e) => {
-    opAddToPrompt(e);
+    numbers = currentPrompt.split(/[/*\-+]/);
+    if (numbers.length === 2) {
+      let opAnswer = operate(currentOperation, numbers[0], numbers[1]);
+      answer.innerText = opAnswer;
+      previousOp.innerText = `${numbers[0]}${currentOperation}${numbers[1]}=`;
+      currentPrompt = opAnswer;
+      opAddToPrompt(e);
+    } else {
+      opAddToPrompt(e);
+    }
   });
 });
 
