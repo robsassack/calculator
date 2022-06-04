@@ -30,51 +30,50 @@ numberButton.forEach(function (number) {
 });
 
 deleteButton.addEventListener("click", () => {
-  if (secondNumber !== '') {
+  if (secondNumber !== "") {
     secondNumber = secondNumber.toString().slice(0, -1);
-  } else if (currentOperation !== '') {
-    currentOperation = '';
-  } else if (firstNumber !== '') {
+  } else if (currentOperation !== "") {
+    currentOperation = "";
+  } else if (firstNumber !== "") {
     firstNumber = firstNumber.toString().slice(0, -1);
   }
   answerDisplay();
 });
 
 clearButton.addEventListener("click", () => {
-  if (firstNumber === '' && previousOp !== '') {
-    previousOp.innerText = '';
+  if (firstNumber === "" && previousOp !== "") {
+    previousOp.innerText = "";
   }
-  firstNumber = '';
-  secondNumber = '';
-  currentOperation = '';
+  firstNumber = "";
+  secondNumber = "";
+  currentOperation = "";
   answer.innerText = "";
 });
 
 decimal.addEventListener("click", () => {
-  if (secondNumber !== '' && !secondNumber.includes(".")) {
-    secondNumber += '.';
-  } if (secondNumber === '' && currentOperation !== '') {
-    secondNumber = '.';
-  } else if (!firstNumber.toString().includes('.')){
-    firstNumber += '.';
+  if (secondNumber !== "" && !secondNumber.includes(".")) {
+    secondNumber += ".";
+  }
+  if (secondNumber === "" && currentOperation !== "") {
+    secondNumber = ".";
+  } else if (!firstNumber.toString().includes(".")) {
+    firstNumber += ".";
   }
   answerDisplay();
 });
 
 equalsButton.addEventListener("click", () => {
-  if (firstNumber !== ''
-  && secondNumber !== ''
-  && currentOperation !== '') {
+  if (firstNumber !== "" && secondNumber !== "" && currentOperation !== "") {
     previousOp.innerText = `${firstNumber}${currentOperation}${secondNumber}=`;
     firstNumber = round(operate(currentOperation, firstNumber, secondNumber));
     answer.innerText = firstNumber;
-    secondNumber = '';
-    currentOperation = '';
-  } else if (firstNumber !== '' && currentOperation === '') {
+    secondNumber = "";
+    currentOperation = "";
+  } else if (firstNumber !== "" && currentOperation === "") {
     previousOp.innerText = `${firstNumber}=`;
     answer.innerText = firstNumber;
-    secondNumber = '';
-    currentOperation = '';
+    secondNumber = "";
+    currentOperation = "";
   }
 });
 
@@ -90,7 +89,7 @@ opButton.forEach(function (op) {
       firstNumber = round(operate(currentOperation, firstNumber, secondNumber));
       answer.innerText = firstNumber;
       setCurrentOp(e);
-      secondNumber = '';
+      secondNumber = "";
       answerDisplay();
     }
   });
