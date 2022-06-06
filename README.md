@@ -2,4 +2,4 @@
 
 A basic calculator made in JavaScript.
 
-![Screenshot of calculator](./screenshot.png)
+![Screenshot of calculator](./screenshot.jpg)
