@@ -1,4 +1,4 @@
-# calculator
+# Calculator
 
 A basic calculator made in JavaScript.
 
